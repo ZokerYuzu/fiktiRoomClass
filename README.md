@@ -12,20 +12,35 @@ Aplikasi mobile untuk memantau status dan ketersediaan ruangan kelas di FIKTI UM
 - **Design System**: Google Fonts (Inter) & Material Design 3
 
 ## Fitur Utama
-1. **Splash Screen**: Branding FIKTI Room dengan animasi fade-in yang halus.
-2. **Role Selection (Pilih Peran)**:
-   - **Relator Kelas**: Memiliki kontrol penuh untuk memperbarui status kehadiran dosen di ruangan.
-   - **Mahasiswa**: Tampilan read-only untuk memantau ketersediaan ruangan secara real-time.
-3. **Dashboard Real-Time**:
-   - **Statistik Header**: Menampilkan jumlah ruangan dengan status *Aktif* (Dosen Masuk), *Menunggu*, dan *Kosong*.
-   - **Tab Lantai**: Peralihan mudah antara Lantai 6 dan Lantai 7.
-   - **Pencarian Pintar**: Cari ruangan berdasarkan nomor kelas, nama dosen, atau mata kuliah.
-   - **Filter Status (Kreativitas)**: Memfilter ruangan secara instan berdasarkan status (Semua, Dosen Masuk, Menunggu, Tidak Masuk, Kosong).
-   - **Reset & Refresh (Kreativitas)**: Menarik ke bawah (pull-to-refresh) atau mengetuk tombol refresh di header untuk menyetel ulang data kembali ke status awal (seed data).
-4. **Room Detail (Detail Ruangan)**:
-   - Informasi detail tentang dosen, mata kuliah, waktu, dan lantai kelas.
-   - Panel konfirmasi kehadiran dosen ("Dosen Masuk" / "Dosen Tidak Masuk") yang hanya tampil untuk Relator Kelas.
-   - Notifikasi snackbar/toast adaptif setelah berhasil memperbarui status ruangan.
+
+### 1. Sistem Multi-Peran (Multi-Role Support)
+- 🏢 **Biro Akademik (Super-Administrator)**: Memiliki wewenang tertinggi untuk meng-override status ruangan apapun serta mengedit data jadwal perkuliahan (Nama Dosen, Mata Kuliah, Jam Mulai/Selesai) secara real-time dari aplikasi.
+- 🎓 **Relator Kelas**: Memiliki kontrol untuk mengonfirmasi kehadiran dosen di ruangan kelas yang aktif pada hari itu.
+- 👁️ **Mahasiswa**: Peran bersifat *read-only* untuk memantau ketersediaan ruangan secara real-time.
+
+### 2. Status Ruangan Komprehensif
+- 🟢 **Dosen Masuk** (Aktif)
+- 🟡 **Menunggu** (Menanti Konfirmasi)
+- 🔴 **Dosen Tidak Masuk** (Absen)
+- ⚫ **Kosong** (Tidak ada perkuliahan)
+- 🟣 **Perbaikan** (Dalam Pemeliharaan / Maintenance Mode) - *Eksklusif Biro*
+- 🔵 **Ujian** (Dipakai Ujian / Exam Mode) - *Eksklusif Biro*
+
+### 3. Dashboard Real-Time
+- **Statistik Header**: Menampilkan jumlah ruangan dengan status *Aktif*, *Menunggu*, dan *Kosong*.
+- **Tab Lantai**: Peralihan mudah antara Lantai 6 dan Lantai 7.
+- **Pencarian Pintar**: Cari ruangan berdasarkan nomor kelas, nama dosen, atau mata kuliah.
+- **Filter Status (Kreativitas)**: Memfilter ruangan secara instan berdasarkan status (Semua, Dosen Masuk, Menunggu, Tidak Masuk, Kosong, Perbaikan, Ujian).
+- **Reset & Refresh (Kreativitas)**: Menarik ke bawah (pull-to-refresh) atau mengetuk tombol refresh di header untuk menyetel ulang data kembali ke status awal (seed data).
+
+### 4. Animasi & Desain UI/UX Premium (Penyempurnaan Visual)
+- **Animasi Berdenyut (*Pulsing Dot Indicator*)**: Dot warna di pojok kanan atas kartu berdenyut lembut untuk menunjukkan status kelas aktif secara berkala.
+- **Umpan Balik Taktil (*Tactile Scale Feedbacks*)**: Efek kartu sedikit mengecil secara elastis (scale `0.95`) saat ditekan untuk mensimulasikan tombol nyata.
+- **Kerangka Memuat Data (*Shimmer Skeleton Loading*)**: Animasi gradien menyapu saat memuat data, memberikan *perceived performance* yang lebih baik daripada spinner tradisional.
+- **Notifikasi Slide-in Atas (*Top Slide-in SnackBar*)**: Pemberitahuan melayang di atas layar (kapsul melengkung) saat Relator atau Biro melakukan pembaruan status.
+- **Transisi Hero Mulus (*Hero Transitions*)**: Perpindahan visual teks nomor ruangan dari Dashboard ke judul Detail Ruangan yang mengalir lancar.
+
+---
 
 ## Cara Menjalankan
 1. Clone repository ini.
@@ -38,6 +53,8 @@ Aplikasi mobile untuk memantau status dan ketersediaan ruangan kelas di FIKTI UM
    ```bash
    flutter run
    ```
+
+---
 
 ## Struktur Folder (Clean MVVM)
 ```
@@ -66,7 +83,10 @@ lib/
 │   │   └── widgets/
 │   │       ├── floor_tab.dart      # Tombol pemilih lantai
 │   │       ├── room_card.dart      # Kartu informasi ruangan grid
-│   │       └── stat_card.dart      # Kartu informasi statistik header
+│   │       ├── stat_card.dart      # Kartu informasi statistik header
+│   │       ├── pulsing_dot.dart    # Indikator status berdenyut
+│   │       ├── tactile_pressable.dart # Efek elastis saat menekan kartu
+│   │       └── shimmer_loading.dart # Animasi loading skeleton
 │   └── room_detail/
 │       ├── room_detail_screen.dart # Layar informasi detail ruangan
 │       └── widgets/
@@ -93,9 +113,8 @@ lib/
 | 708 | 7 | - | - | - | Kosong |
 
 ## Screenshots
-*(Tambahkan screenshot antarmuka aplikasi di sini)*
-- Splash Screen
-- Pemilihan Peran (Role Selection)
-- Dashboard Mahasiswa vs Relator Kelas
-- Layar Detail & Form Konfirmasi Kehadiran Dosen
-- Notifikasi Sukses Perubahan Status
+- Splash Screen (Animasi fade-in logo FIKTI UMSU)
+- Layar Pemilihan Peran (Biro Akademik, Relator Kelas, Mahasiswa)
+- Dashboard Utama (Statistik real-time, filter status chip, pencarian text-field)
+- Layar Detail Ruangan & Panel Aksi (Override Status Biro, Form Edit Jadwal, Banner Read-only Mahasiswa)
+- Top Slide-in Toast Notification
